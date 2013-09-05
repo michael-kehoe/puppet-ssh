@@ -1,0 +1,97 @@
+# File managed by Puppet
+
+# What ports, IPs and protocols we listen for
+<% if @ssh_port != 'undef' %><% ssh_port.each do |line| -%>
+Port <%= line %>
+<% end -%><% else %>Port 22<% end -%>
+# Use these options to restrict which interfaces/protocols sshd will bind to
+#ListenAddress ::
+<% if @ssh_listenaddress != 'undef' %><% ssh_listenaddress.each do |line| -%>
+ListenAddress <%= line %>
+<% end -%><% else %>ListenAddress 0.0.0.0<% end -%>
+Protocol 2
+
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+
+#Privilege Separation is turned on for security
+<% if @ssh_useprivilegeseparation != 'undef' -%>UsePrivilegeSeparation <%= ssh_useprivilegeseparation %><% else %>UsePrivilegeSeparation yes<% end %>
+
+# Lifetime and size of ephemeral version 1 server key
+<% if @ssh_keyregenerationinterval != 'undef' -%>KeyRegenerationInterval <%= ssh_keyregenerationinterval %><% else %>KeyRegenerationInterval 3600<% end %>
+<% if @ssh_serverkeybits != 'undef' -%>ServerKeyBits <%= ssh_serverkeybits %><% else %>ServerKeyBits 768<% end %>
+
+# Logging
+<% if @ssh_syslogfacility != 'undef' -%>SyslogFacility <%= ssh_syslogfacility %><% else %>SyslogFacility AUTH<% end %>
+<% if @ssh_loglevel!= 'undef' -%>LogLevel <%= ssh_loglevel %><% else %>LogLevel INFO<% end %>
+
+# Authentication:
+<% if @ssh_logingracetime != 'undef' -%>LoginGraceTime <%= ssh_logingracetime %><% else %>LoginGraceTime 60<% end %>
+<% if @ssh_permitrootlogin != 'undef' -%>PermitRootLogin <%= ssh_permitrootlogin %><% else %>PermitRootLogin no<% end %>
+<% if @ssh_strictmodes != 'undef' -%>StrictModes <%= ssh_strictmodes %><% else %>StrictModes yes<% end %>
+
+<% if @ssh_rsaauthentication != 'undef' -%>RSAAuthentication <%= ssh_rsaauthentication %><% else %>RSAAuthentication yes<% end %>
+<% if @ssh_pubkeyauthentication != 'undef' -%>PubkeyAuthentication <%= ssh_pubkeyauthentication %><% else %>PubkeyAuthentication yes<% end %>
+<% if @ssh_authorizedkeysfile != 'undef' -%>AuthorizedKeysFile <%= ssh_authorizedkeysfile %><% else %>#AuthorizedKeysFile %h/.ssh/authorized_keys<% end %>
+
+# Don't read the user's ~/.rhosts and ~/.shosts files
+<% if @ssh_ignorerhosts != 'undef' -%>IgnoreRhosts <%= ssh_ignorerhosts %><% else %>IgnoreRhosts yes<% end %>
+# For this to work you will also need host keys in /etc/ssh_known_hosts
+<% if @ssh_rhostsrsaauthentication != 'undef' -%>RhostsRSAAuthentication <%= ssh_rhostsrsaauthentication %><% else %>RhostsRSAAuthentication no<% end %>
+# similar for protocol version 2
+<% if @ssh_hostbasedauthentication != 'undef' -%>HostbasedAuthentication <%= ssh_hostbasedauthentication %><% else %>HostbasedAuthentication no<% end %>
+# Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
+<% if @ssh_ignoreuserknownhosts != 'undef' -%>IgnoreUserKnownHosts <%= ssh_ignoreuserknownhosts %><% else %>IgnoreUserKnownHosts no<% end %>
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+<% if @ssh_permitemptypasswords != 'undef' -%>PermitEmptyPasswords <%= ssh_permitemptypasswords %><% else %>PermitEmptyPasswords no<% end %>
+
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+<% if @ssh_challengeresponseauthentication != 'undef' -%>ChallengeResponseAuthentication <%= ssh_challengeresponseauthentication %><% else %>ChallengeResponseAuthentication no<% end %>
+
+# Change to no to disable tunnelled clear text passwords
+<% if @ssh_passwordauthentication != 'undef' -%>PasswordAuthentication <%= ssh_passwordauthentication %><% else %>PasswordAuthentication yes<% end %>
+
+# Kerberos options
+<% if @ssh_kerberosauthentication != 'undef' -%>KerberosAuthentication <%= ssh_kerberosauthentication %><% else %>#KerberosAuthentication no<% end %>
+<% if @ssh_kerberosgetafstoken != 'undef' -%>KerberosGetAFSToken <%= ssh_kerberosgetafstoken %><% else %>#KerberosGetAFSToken no<% end %>
+<% if @ssh_kerberosorlocalpasswd != 'undef' -%>KerberosOrLocalPasswd <%= ssh_kerberosorlocalpasswd %><% else %>#KerberosOrLocalPasswd no<% end %>
+<% if @ssh_kerberosticketcleanup != 'undef' -%>KerberosTicketCleanup <%= ssh_kerberosticketcleanup %><% else %>#KerberosTicketCleanup no<% end %>
+
+# GSSAPI options
+<% if @ssh_gssapiauthentication != 'undef' -%>GSSAPIAuthentication <%= ssh_gssapiauthentication %><% else %>#GSSAPIAuthentication no<% end %>
+<% if @ssh_gssapicleanupcredentials != 'undef' -%>GSSAPICleanupCredentials <%= ssh_gssapicleanupcredentials %><% else %>#GSSAPICleanupCredentials yes<% end %>
+
+<% if @ssh_x11forwarding != 'undef' -%>X11Forwarding <%= ssh_x11forwarding %><% else %>X11Forwarding no<% end %>
+<% if @ssh_x11displayoffset != 'undef' -%>X11DisplayOffset <%= ssh_x11displayoffset %><% else %>X11DisplayOffset 10<% end %>
+<% if @ssh_printmotd != 'undef' -%>PrintMotd <%= ssh_printmotd %><% else %>PrintMotd no<% end %>
+<% if @ssh_printlastlog != 'undef' -%>PrintLastLog <%= ssh_printlastlog %><% else %>PrintLastLog no<% end %>
+<% if @ssh_tcpkeepalive != 'undef' -%>TCPKeepAlive <%= ssh_tcpkeepalive %><% else %>TCPKeepAlive yes<% end %>
+<% if @ssh_uselogin != 'undef' -%>UseLogin <%= ssh_uselogin %><% else %>#UseLogin no<% end %>
+
+<% if @ssh_MaxStartups != 'undef' -%>MaxStartups <%= ssh_MaxStartups %><% else %>#MaxStartups 10:30:60<% end %>
+<% if @ssh_banner != 'undef'-%>Banner <%= ssh_banner %><% else %>Banner /etc/issue.net<% end %>
+
+# Allow client to pass locale environment variables
+<% if @ssh_acceptenv != 'undef' -%>AcceptEnv <%= ssh_acceptenv %><% else %>AcceptEnv LANG LC_*<% end %>
+
+
+<% if @ssh_subsystem != 'undef' %><% ssh_subsystem.each do |line| -%>
+Subsystem <%= line %>
+<% end -%>
+<% else %>Subsystem sftp /usr/lib/openssh/sftp-server
+<% end -%>
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+<% if @ssh_usepam != 'undef' -%>UsePAM <%= ssh_usepam %><% else %>UsePAM yes<% end %>
